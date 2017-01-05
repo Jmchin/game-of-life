@@ -15,8 +15,8 @@ TODO:
         * or do not allow edges to be populated
 """
 
-WIDTH = 80
-HEIGHT = 80
+WIDTH = 100
+HEIGHT = 100
 
 COLOR_ON = (0, 0, 0)
 COLOR_OFF = (255, 255, 255)
@@ -28,7 +28,7 @@ STATES = [ON, OFF]
 
 def random_grid(height, width):
     """instantiates a non-uniform random grid of ON/OFF cells"""
-    return random.choice(STATES, (height * width), p=[0.3, 0.7]).reshape(height, width)
+    return random.choice(STATES, (height * width), p=[0.2, 0.8]).reshape(height, width)
 
 def render(root, con, cells):
     """renders the world of cells depending on their state"""
@@ -46,11 +46,15 @@ def update(cells):
     """updates the cell state using conway's rules"""
     new_cells = cells.copy()
 
-    for x in range(WIDTH):
-        for y in range(HEIGHT):
-            neighbors = int(cells[x, (y-1)%WIDTH] + cells[x, (y+1)%WIDTH] +
-                             cells[(x-1)%WIDTH, y] + cells[(x+1)%WIDTH, y] +
-                             cells[(x+1)%WIDTH, (y-1)%WIDTH] + cells[(x+1)%WIDTH, (y+1)%WIDTH])
+    for x in range(WIDTH-1):
+        for y in range(HEIGHT-1):
+            #neighbors = int(cells[x, (y-1)%WIDTH] + cells[x, (y+1)%WIDTH] +
+            #                 cells[(x-1)%WIDTH, y] + cells[(x+1)%WIDTH, y] +
+            #                 cells[(x+1)%WIDTH, (y-1)%WIDTH] + cells[(x+1)%WIDTH, (y+1)%WIDTH])
+
+            neighbors = int(cells[(x-1)%WIDTH, (y-1)%WIDTH] + cells[x, (y-1)%WIDTH] + cells[(x+1)%WIDTH, (y-1)%WIDTH] +
+                           cells[(x-1)%WIDTH, y] + cells[(x+1)%WIDTH, y] +
+                           cells[(x-1)%WIDTH, (y+1)%WIDTH] + cells[x, (y+1)%WIDTH] + cells[(x+1)%WIDTH, (y+1)%WIDTH])
 
             if cells[x,y] == ON:
                 if (neighbors < 2) or (neighbors > 3):
