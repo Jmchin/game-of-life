@@ -8,15 +8,15 @@ An implementation of Conway's Game of Life
 using tdl as the graphical library.
 
 TODO:
-    setup the World - a 1D-list of cells
-    setup the cells - need to be aware of neighbors
-    handle edge conditions
-        * toroidal geometry
-        * or do not allow edges to be populated
+    * mouse support
+    * command line arguments
+        * specify grid size
+        * example structures
+    * render a new window to keep track of current generation
 """
 
-WIDTH = 100
-HEIGHT = 100
+WIDTH = 60
+HEIGHT = 60
 
 COLOR_ON = (0, 0, 0)
 COLOR_OFF = (255, 255, 255)
@@ -34,8 +34,7 @@ def render(root, con, cells):
     """renders the world of cells depending on their state"""
     for x in range(WIDTH):
         for y in range(HEIGHT):
-            cell = cells[x][y]
-            if cell == 1:
+            if cells[x, y] == 1:
                 con.draw_char(x, y, None, bg=COLOR_ON)
             else:
                 con.draw_char(x, y, None, bg=COLOR_OFF)
@@ -46,12 +45,9 @@ def update(cells):
     """updates the cell state using conway's rules"""
     new_cells = cells.copy()
 
-    for x in range(WIDTH-1):
-        for y in range(HEIGHT-1):
-            #neighbors = int(cells[x, (y-1)%WIDTH] + cells[x, (y+1)%WIDTH] +
-            #                 cells[(x-1)%WIDTH, y] + cells[(x+1)%WIDTH, y] +
-            #                 cells[(x+1)%WIDTH, (y-1)%WIDTH] + cells[(x+1)%WIDTH, (y+1)%WIDTH])
-
+    for x in range(WIDTH):
+        for y in range(HEIGHT):
+            # adds total of neighbors that are ON
             neighbors = int(cells[(x-1)%WIDTH, (y-1)%WIDTH] + cells[x, (y-1)%WIDTH] + cells[(x+1)%WIDTH, (y-1)%WIDTH] +
                            cells[(x-1)%WIDTH, y] + cells[(x+1)%WIDTH, y] +
                            cells[(x-1)%WIDTH, (y+1)%WIDTH] + cells[x, (y+1)%WIDTH] + cells[(x+1)%WIDTH, (y+1)%WIDTH])
@@ -63,7 +59,6 @@ def update(cells):
                 if neighbors == 3:
                     new_cells[x,y] = ON
 
-    #import pdb; pdb.set_trace()
     cells[:] = new_cells[:]
 
 def main():
@@ -75,10 +70,10 @@ def main():
     cells = random_grid(HEIGHT, WIDTH)
 
     while True:
+        # TODO: add some program loop control / exit condition
         render(root, con, cells)
         tdl.flush()
         update(cells)
-        #import pdb; pdb.set_trace()
 
 if __name__ == '__main__':
     main()
